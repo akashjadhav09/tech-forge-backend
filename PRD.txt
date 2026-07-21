@@ -44,7 +44,8 @@ Blog Routes :-
     PATCH   /api/v1/blog/:id/publish
 
 Comment Routes :-
-    GET     /api/v1/comments
+    GET     /api/v1/comments/:blogId
+    GET     /api/v1/comments/:userId
     POST    /api/v1/comment
     PUT     /api/v1/comment/:id
     DELETE  /api/v1/comment/:id

@@ -8,6 +8,7 @@ import {
     publishBlogController,
     deleteBlogController,
 } from "./blog.controller.ts";
+import { likeRouter } from "../likes/like.routes.ts";
 
 export const blogRouter = Router();
 
@@ -39,3 +40,6 @@ blogRouter.patch("/:id/publish", authenticateToken, publishBlogController);
 // DELETE /api/v1/blog/:id
 // Delete a blog post (Requires auth & ownership)
 blogRouter.delete("/:id", authenticateToken, deleteBlogController);
+
+// Nested like routes: POST/DELETE/GET /api/v1/blog/:blogId/like
+blogRouter.use("/:blogId/like", likeRouter);
