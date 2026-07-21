@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+
 import { signIn, signUp, resetPassword } from "./auth.service.ts";
 import type { SignInInput, SignUpInput, ResetPasswordInput } from "./auth.types.ts";
 

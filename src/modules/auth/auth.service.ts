@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
-import { findUserByEmail, createUser, updateUserPassword } from "./auth.repository.ts";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.ts";
+
 import { AppError } from "../../middlewares/error.middleware.ts";
+import { findUserByEmail, createUser, updateUserPassword } from "./auth.repository.ts";
 import type { SignInInput, AuthTokens, SignUpInput, ResetPasswordInput } from "./auth.types.ts";
 
 /**
@@ -15,8 +16,7 @@ export async function signIn(data: SignInInput): Promise<AuthTokens> {
 
   // Use a constant-time comparison even when user is null to prevent
   // timing-based user enumeration attacks.
-  const DUMMY_HASH =
-    "$2b$10$invalidhashfortimingreasonsonlyXXXXXXXXXXXXXXXXXXXX";
+  const DUMMY_HASH = "$2b$10$invalidhashfortimingreasonsonlyXXXXXXXXXXXXXXXXXXXX";
 
   const passwordToCheck = user?.password ?? DUMMY_HASH;
   const isPasswordValid = await bcrypt.compare(data.password, passwordToCheck);

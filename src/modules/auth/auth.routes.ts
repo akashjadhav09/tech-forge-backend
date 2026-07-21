@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { validate } from "../../middlewares/validation.middleware.ts";
 import { signInSchema, signUpSchema, resetPasswordSchema } from "./auth.validation.ts";
 import { signInController, signUpController, resetPasswordController } from "./auth.controller.ts";

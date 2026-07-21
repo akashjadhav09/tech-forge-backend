@@ -1,4 +1,5 @@
 import { pool } from "../../config/db.ts";
+
 import type { CommentRow, CommentWithAuthorRow } from "./comment.types.ts";
 
 /**

@@ -1,4 +1,5 @@
 import { pool } from "../../config/db.ts";
+
 import type { BlogRow, BlogStatus } from "./blog.types.ts";
 
 export type BlogWithRelationsRow = BlogRow & {
@@ -138,7 +139,7 @@ export async function updateBlog(
 ): Promise<BlogRow> {
     const setClause: string[] = [];
     const values: (string | Date | null)[] = [];
-    
+
     // Explicitly check for fields using property check or !== undefined
     if (updates.categoryId !== undefined) {
         setClause.push(`category_id = $${values.push(updates.categoryId)}`);

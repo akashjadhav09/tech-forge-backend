@@ -1,3 +1,6 @@
+import { findBlogById } from "../blogs/blog.repository.ts";
+import { findUserById } from "../users/user.repository.ts";
+import { AppError } from "../../middlewares/error.middleware.ts";
 import {
     createComment,
     findCommentById,
@@ -6,9 +9,6 @@ import {
     updateComment,
     deleteCommentById,
 } from "./comment.repository.ts";
-import { findBlogById } from "../blogs/blog.repository.ts";
-import { findUserById } from "../users/user.repository.ts";
-import { AppError } from "../../middlewares/error.middleware.ts";
 import type { CommentRow, CommentWithAuthorRow, CommentResponse } from "./comment.types.ts";
 
 // ─── Helper ───────────────────────────────────────────────────────────────────

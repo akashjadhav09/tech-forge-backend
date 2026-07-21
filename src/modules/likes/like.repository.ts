@@ -1,4 +1,5 @@
 import { pool } from "../../config/db.ts";
+
 import type { LikeRow } from "./like.types.ts";
 
 /**

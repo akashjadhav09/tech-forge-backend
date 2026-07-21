@@ -1,10 +1,7 @@
 import { pool } from "../../config/db.ts";
+
 import type { UserRow } from "./auth.types.ts";
 
-/**
- * Fetches a single user record by email address.
- * Returns `null` if no user is found.
- */
 export async function findUserByEmail(email: string): Promise<UserRow | null> {
   const result = await pool.query<UserRow>(
     `SELECT user_id, full_name, email, password, created_at, updated_at

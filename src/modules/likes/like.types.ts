@@ -1,5 +1,4 @@
 // ─── Database Row Type ───────────────────────────────────────────────────────
-
 export interface LikeRow {
     like_id: string;
     blog_id: string;
@@ -8,7 +7,6 @@ export interface LikeRow {
 }
 
 // ─── Response Types ───────────────────────────────────────────────────────────
-
 export interface LikeResponse {
     likeId: string;
     blogId: string;
