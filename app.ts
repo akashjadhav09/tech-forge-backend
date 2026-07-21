@@ -2,8 +2,10 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { setupHttpLogging } from "./src/utils/logger.ts";
-import { authRouter } from "./src/modules/auth/auth.routes.ts";
 import { errorHandler } from "./src/middlewares/error.middleware.ts";
+
+import { authRouter } from "./src/modules/auth/auth.routes.ts";
+import { userRouter } from "./src/modules/users/user.routes.ts";
 
 const app = express();
 
@@ -20,6 +22,7 @@ app.get("/health", (_req, res) => {
 
 // ── API Routes ───────────────────────────────────────────────────────────────
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
 
 // ── Global Error Handler (must be last) ──────────────────────────────────────
 app.use(errorHandler);

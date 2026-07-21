@@ -5,7 +5,13 @@ How to run :-
     npm install
     npm run migrate
     npm run dev
-    
+
+SignIn cred :-
+    { 
+        "email": "akash@example.com", 
+        "password": "secret123" 
+    }
+
 How API works :-
     Route -> Controller -> Service -> Repository -> Database
 
@@ -17,3 +23,51 @@ Auth Routes :-
     POST   /api/v1/auth/logout
     POST   /api/v1/auth/forgot-password
     POST   /api/v1/auth/reset-password
+
+User Routes :-
+    - User Profile :-
+        GET    /api/v1/users/me
+        PUT    /api/v1/users/me
+        PATCH  /api/v1/users/me/avatar
+        DELETE /api/v1/users/me
+    
+    - Public Users :-
+        GET    /api/v1/users/:id
+
+Blog Routes :-
+    POST    /api/v1/blog
+    GET     /api/v1/blog
+    GET     /api/v1/blog/:id
+    GET     /api/v1/blog/search
+    PUT     /api/v1/blog/:id
+    DELETE  /api/v1/blog/:id
+    PATCH   /api/v1/blog/:id/publish
+
+Comment Routes :-
+    GET     /api/v1/comments
+    POST    /api/v1/comment
+    PUT     /api/v1/comment/:id
+    DELETE  /api/v1/comment/:id
+
+Like Routes :-
+    POST    /api/v1/blog/:blogId/like
+    DELETE  /api/v1/blog/:blogId/like
+    GET     /api/v1/blog/:blogId/like
+
+
+
+
+Method	Endpoint	Body (JSON)	Returns
+POST	/api/v1/auth/signup	{ "full_name": "John Doe", "email": "john@example.com", "password": "secret123" }	{ accessToken, refreshToken }
+POST	/api/v1/auth/signin	{ "email": "john@example.com", "password": "secret123" }	{ accessToken, refreshToken }
+POST	/api/v1/auth/resetPassword	{ "email": "john@example.com", "oldPassword": "secret123", "newPassword": "newpass456" }	200 OK
+Use the accessToken from sign-in as the Bearer token in all protected routes below.
+
+Step 2 — User Routes (all require JWT)
+Method	Endpoint	Header	Body / Form-data	Notes
+GET	/api/v1/users/me	Authorization: Bearer <token>	—	Returns your own profile
+PUT	/api/v1/users/me	Authorization: Bearer <token>	{ "fullName"?: "Jane", "email"?: "jane@x.com", "bio"?: "Hello!" }	At least one field required
+PATCH	/api/v1/users/me/avatar	Authorization: Bearer <token>	form-data → key: profile-image, value: image file	Max 2 MB · jpeg/png/webp/gif
+DELETE	/api/v1/users/me	Authorization: Bearer <token>	—	Permanently deletes your account
+GET	/api/v1/users/:id	Authorization: Bearer <token>	—	Replace :id with any user's UUID
+POST	/api/v1/users/upload-profile-image	Authorization: Bearer <token>	form-data → key: profile-image, value: image file	Legacy endpoint

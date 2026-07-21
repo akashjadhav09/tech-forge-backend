@@ -5,6 +5,18 @@ export interface SignInInput {
   password: string;
 }
 
+export interface SignUpInput {
+  full_name: string;
+  email: string;
+  password: string;
+}
+
+export interface ResetPasswordInput {
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+}
+
 // ── Database Row Types ────────────────────────────────────────────────────────
 
 export interface UserRow {
@@ -12,6 +24,8 @@ export interface UserRow {
   full_name: string;
   email: string;
   password: string;
+  bio: string;
+  profile_image: string; // column name in DB: profile_image
   created_at: Date;
   updated_at: Date;
 }
@@ -23,15 +37,26 @@ export interface AuthTokens {
   refreshToken: string;
 }
 
-
-export interface SignUpInput {
-  full_name: string;
+/**
+ * Safe user profile shape returned to the client.
+ * Never includes password.
+ */
+export interface UserProfile {
+  userId: string;
+  fullName: string;
   email: string;
-  password: string;
+  bio: string;
+  profileImage: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface ResetPasswordInput {
-  email: string;
-  oldPassword: string;
-  newPassword: string;
+/**
+ * Allowed fields for PUT /users/me.
+ * All fields are optional — only provided ones are updated.
+ */
+export interface UpdateProfileInput {
+  fullName?: string;
+  email?: string;
+  bio?: string;
 }

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS likes (
     blog_id UUID NOT NULL,
     user_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
+    
     CONSTRAINT fk_like_blog
         FOREIGN KEY(blog_id)
         REFERENCES blogs(blog_id)
