@@ -76,8 +76,10 @@ export async function createNewBlog(
     data: CreateBlogInput
 ): Promise<BlogResponse> {
     const slug = await generateUniqueSlug(data.title);
-    const categoryId = data.categoryId ?? null;
-    const coverImage = data.coverImage ?? null;
+    // public\assets\avatars\default-avatar.webp
+    const categoryId = data.categoryId || null;
+    //public\assets\blogs\default-blog.webp
+    const coverImage = data.coverImage || null;
     const status: BlogStatus = data.status ?? "Draft";
 
     const blog = await createBlog({
@@ -151,10 +153,10 @@ export async function updateCurrentUserBlog(
         updatePayload.content = updates.content;
     }
     if (updates.categoryId !== undefined) {
-        updatePayload.categoryId = updates.categoryId;
+        updatePayload.categoryId = updates.categoryId || null;
     }
     if (updates.coverImage !== undefined) {
-        updatePayload.coverImage = updates.coverImage;
+        updatePayload.coverImage = updates.coverImage || null;
     }
     if (updates.status !== undefined) {
         updatePayload.status = updates.status;
