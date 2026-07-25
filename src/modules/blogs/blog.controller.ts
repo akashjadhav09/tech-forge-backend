@@ -5,6 +5,7 @@ import {
     createNewBlog,
     getAllBlogs,
     getBlogDetailsById,
+    getAllBlogsByUser,
     updateCurrentUserBlog,
     publishBlog,
     deleteCurrentUserBlog,
@@ -23,6 +24,38 @@ function requireUserId(req: Request): string {
 // ─── Controllers ──────────────────────────────────────────────────────────────
 
 /**
+ * POST /api/v1/blog/upload-image
+ * Receives a single image via multer (field: "blog-image"),
+ * saves it to public/assets/blogs/ and returns the public URL.
+ */
+export async function uploadBlogImageController(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> {
+    try {
+        if (!req.file) {
+            throw new AppError(400, "No image file provided. Use field name 'blog-image'.");
+        }
+
+        // Build the public URL: http(s)://<host>/assets/blogs/<filename>
+        const protocol = req.protocol;
+        const host = req.get("host");
+        const imageUrl = `${protocol}://${host}/assets/blogs/${req.file.filename}`;
+
+        res.status(200).json({
+            success: true,
+            message: "Image uploaded successfully",
+            data: { imageUrl },
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
+/**
  * POST /api/v1/blog
  * Creates a new blog post. (Requires auth)
  */
@@ -33,7 +66,7 @@ export async function createNewBlogController(
 ): Promise<void> {
     try {
         const userId = requireUserId(req);
-        const { title, content, categoryId, coverImage, status } = req.body as CreateBlogInput;
+        const { title, content, categoryId, coverImage, tags, status } = req.body as CreateBlogInput;
 
         if (!title || !content) {
             throw new AppError(400, "Title and content are required.");
@@ -44,6 +77,7 @@ export async function createNewBlogController(
             content,
             ...(categoryId !== undefined && { categoryId }),
             ...(coverImage !== undefined && { coverImage }),
+            ...(tags !== undefined && { tags }),
             ...(status !== undefined && { status }),
         });
 
@@ -88,6 +122,25 @@ export async function getAllBlogsController(
         };
 
         const blogs = await getAllBlogs(filters);
+
+        res.status(200).json({
+            success: true,
+            message: "Blogs fetched successfully",
+            data: blogs,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function getAllBlogsByUserIdController(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> {
+    try {
+        const userId = requireUserId(req);
+        const blogs = await getAllBlogsByUser(userId);
 
         res.status(200).json({
             success: true,
@@ -146,13 +199,14 @@ export async function updateBlogController(
             throw new AppError(400, "Blog id is required.");
         }
 
-        const { title, content, categoryId, coverImage, status } = req.body as UpdateBlogInput;
+        const { title, content, categoryId, coverImage, tags, status } = req.body as UpdateBlogInput;
 
         if (
             title === undefined &&
             content === undefined &&
             categoryId === undefined &&
             coverImage === undefined &&
+            tags === undefined &&
             status === undefined
         ) {
             throw new AppError(400, "Provide at least one field to update.");
@@ -163,6 +217,7 @@ export async function updateBlogController(
             ...(content !== undefined && { content }),
             ...(categoryId !== undefined && { categoryId }),
             ...(coverImage !== undefined && { coverImage }),
+            ...(tags !== undefined && { tags }),
             ...(status !== undefined && { status }),
         };
 

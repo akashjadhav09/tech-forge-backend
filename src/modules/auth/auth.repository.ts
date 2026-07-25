@@ -41,3 +41,15 @@ export async function updateUserPassword(data: { userId: string, password: strin
     throw new Error(`No user found with id ${data.userId}`);
   }
 }
+
+export async function findUserById(userId: string): Promise<UserRow | null> {
+  const result = await pool.query<UserRow>(
+    `SELECT user_id, full_name, email, password, created_at, updated_at
+       FROM users
+      WHERE user_id = $1
+      LIMIT 1`,
+    [userId]
+  );
+
+  return result.rows[0] ?? null;
+}

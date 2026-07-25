@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
-import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.ts";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../utils/jwt.ts";
 
 import { AppError } from "../../middlewares/error.middleware.ts";
-import { findUserByEmail, createUser, updateUserPassword } from "./auth.repository.ts";
-import type { SignInInput, AuthTokens, SignUpInput, ResetPasswordInput } from "./auth.types.ts";
+import { findUserByEmail, createUser, updateUserPassword, findUserById } from "./auth.repository.ts";
+import type { SignInInput, AuthTokens, SignUpInput, ResetPasswordInput, RefreshTokenInput } from "./auth.types.ts";
 
 /**
  * Validates credentials and returns a pair of JWT tokens.

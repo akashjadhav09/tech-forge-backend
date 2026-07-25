@@ -17,6 +17,10 @@ export interface ResetPasswordInput {
   newPassword: string;
 }
 
+export interface RefreshTokenInput {
+  refreshToken: string;
+}
+
 // ── Database Row Types ────────────────────────────────────────────────────────
 
 export interface UserRow {

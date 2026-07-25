@@ -17,12 +17,13 @@ export async function createBlog(data: {
     slug: string;
     content: string;
     coverImage: string | null;
+    tags: string[];
     status: BlogStatus;
 }): Promise<BlogRow> {
     const result = await pool.query<BlogRow>(
-        `INSERT INTO blogs (user_id, category_id, title, slug, content, cover_image, status)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)
-         RETURNING blog_id, user_id, category_id, title, slug, content, cover_image, status, view_count, published_at, created_at, updated_at`,
+        `INSERT INTO blogs (user_id, category_id, title, slug, content, cover_image, tags, status)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING blog_id, user_id, category_id, title, slug, content, cover_image, tags, status, view_count, published_at, created_at, updated_at`,
         [
             data.userId,
             data.categoryId,
@@ -30,6 +31,7 @@ export async function createBlog(data: {
             data.slug,
             data.content,
             data.coverImage,
+            data.tags,
             data.status,
         ]
     );
@@ -54,6 +56,24 @@ export async function findBlogById(blogId: string): Promise<BlogWithRelationsRow
     );
 
     return result.rows[0] ?? null;
+}
+
+/**
+ * Dynamic search query for blogs by user ID.
+ */
+export async function searchBlogsbyUserId(
+    userId: string,
+): Promise<BlogWithRelationsRow[]> {
+    const result = await pool.query<BlogWithRelationsRow>(
+        `SELECT b.*, u.full_name AS author_name, c.name AS category_name
+         FROM blogs b
+         JOIN users u ON b.user_id = u.user_id
+         LEFT JOIN categories c ON b.category_id = c.category_id
+         WHERE b.user_id = $1`,
+        [userId]
+    );
+
+    return result.rows;
 }
 
 /**
@@ -133,6 +153,7 @@ export async function updateBlog(
         slug?: string;
         content?: string;
         coverImage?: string | null;
+        tags?: string[];
         status?: BlogStatus;
         publishedAt?: Date | null;
     }
@@ -156,6 +177,9 @@ export async function updateBlog(
     if (updates.coverImage !== undefined) {
         setClause.push(`cover_image = $${values.push(updates.coverImage)}`);
     }
+    if (updates.tags !== undefined) {
+        setClause.push(`tags = $${values.push(updates.tags as unknown as string)}`);
+    }
     if (updates.status !== undefined) {
         setClause.push(`status = $${values.push(updates.status)}`);
     }
@@ -177,7 +201,7 @@ export async function updateBlog(
         UPDATE blogs
         SET ${setClause.join(", ")}
         WHERE blog_id = ${idPlaceholder}
-        RETURNING blog_id, user_id, category_id, title, slug, content, cover_image, status, view_count, published_at, created_at, updated_at
+        RETURNING blog_id, user_id, category_id, title, slug, content, cover_image, tags, status, view_count, published_at, created_at, updated_at
     `;
 
     const result = await pool.query<BlogRow>(query, values);

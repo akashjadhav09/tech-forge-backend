@@ -8,6 +8,7 @@ export interface CreateBlogInput {
     title: string;
     content: string;
     coverImage?: string; // Optional
+    tags?: string[];     // Optional, defaults to empty array
     status?: BlogStatus; // Optional, defaults to 'Draft'
 }
 
@@ -19,6 +20,7 @@ export interface UpdateBlogInput {
     title?: string;
     content?: string;
     coverImage?: string;
+    tags?: string[];
     status?: BlogStatus;
 }
 
@@ -32,6 +34,7 @@ export interface BlogRow {
     slug: string;
     content: string;
     cover_image: string | null;
+    tags: string[];
     status: BlogStatus;
     view_count: number;
     published_at: Date | null;
@@ -49,6 +52,7 @@ export interface BlogResponse {
     slug: string;
     content: string;
     coverImage: string | null;
+    tags: string[];
     status: BlogStatus;
     viewCount: number;
     publishedAt: Date | null;

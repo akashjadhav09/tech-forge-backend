@@ -5,6 +5,7 @@ import {
     findBlogById,
     findBlogBySlug,
     searchBlogs,
+    searchBlogsbyUserId,
     updateBlog,
     deleteBlogById,
     incrementBlogViewCount,
@@ -32,6 +33,7 @@ function toBlogResponse(row: BlogRow | BlogWithRelationsRow): BlogResponse {
         slug: row.slug,
         content: row.content,
         coverImage: row.cover_image,
+        tags: row.tags ?? [],
         status: row.status,
         viewCount: row.view_count,
         publishedAt: row.published_at,
@@ -80,6 +82,7 @@ export async function createNewBlog(
     const categoryId = data.categoryId || null;
     //public\assets\blogs\default-blog.webp
     const coverImage = data.coverImage || null;
+    const tags: string[] = data.tags ?? [];
     const status: BlogStatus = data.status ?? "Draft";
 
     const blog = await createBlog({
@@ -89,6 +92,7 @@ export async function createNewBlog(
         slug,
         content: data.content,
         coverImage,
+        tags,
         status,
     });
 
@@ -106,6 +110,11 @@ export async function getAllBlogs(filters: {
     offset?: number;
 }): Promise<BlogResponse[]> {
     const rows = await searchBlogs(filters);
+    return rows.map(toBlogResponse);
+}
+
+export async function getAllBlogsByUser(userId: string): Promise<BlogResponse[]> {
+    const rows = await searchBlogsbyUserId(userId);
     return rows.map(toBlogResponse);
 }
 
@@ -157,6 +166,9 @@ export async function updateCurrentUserBlog(
     }
     if (updates.coverImage !== undefined) {
         updatePayload.coverImage = updates.coverImage || null;
+    }
+    if (updates.tags !== undefined) {
+        updatePayload.tags = updates.tags;
     }
     if (updates.status !== undefined) {
         updatePayload.status = updates.status;
