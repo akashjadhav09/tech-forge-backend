@@ -13,6 +13,7 @@ import {
     uploadBlogImageController,
 } from "./blog.controller.ts";
 import { likeRouter } from "../likes/like.routes.ts";
+import { dislikeRouter } from "../dislikes/dislike.routes.ts";
 
 export const blogRouter = Router();
 
@@ -56,3 +57,6 @@ blogRouter.delete("/:id", authenticateToken, deleteBlogController);
 
 // Nested like routes: POST/DELETE/GET /api/v1/blog/:blogId/like
 blogRouter.use("/:blogId/like", likeRouter);
+
+// Nested dislike routes: POST/DELETE/GET /api/v1/blog/:blogId/dislike
+blogRouter.use("/:blogId/dislike", dislikeRouter);

@@ -55,6 +55,11 @@ Like Routes :-
     DELETE  /api/v1/blog/:blogId/like
     GET     /api/v1/blog/:blogId/like
 
+Dislike Routes :-
+    POST    /api/v1/blog/:blogId/dislike
+    DELETE  /api/v1/blog/:blogId/dislike
+    GET     /api/v1/blog/:blogId/dislike
+
 
 
 

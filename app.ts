@@ -10,6 +10,7 @@ import { userRouter } from "./src/modules/users/user.routes.ts";
 import { blogRouter } from "./src/modules/blogs/blog.routes.ts";
 import { commentRouter } from "./src/modules/comments/comment.routes.ts";
 import { likeRouter } from "./src/modules/likes/like.routes.ts";
+import { dislikeRouter } from "./src/modules/dislikes/dislike.routes.ts"
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use("/api/v1/comments", commentRouter);
 // POST /api/v1/comment, PUT /api/v1/comment/:id, DELETE /api/v1/comment/:id
 app.use("/api/v1/comment", commentRouter);
 app.use("api/v1/likes", likeRouter);
+app.use("api/v1/dislikes", dislikeRouter);
 
 // ── Global Error Handler (must be last) ──────────────────────────────────────
 app.use(errorHandler);
