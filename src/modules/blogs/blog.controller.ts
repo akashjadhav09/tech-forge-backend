@@ -102,20 +102,30 @@ export async function getAllBlogsController(
 ): Promise<void> {
     try {
         const limitParam = req.query["limit"];
+        const pageParam = req.query["page"];
         const offsetParam = req.query["offset"];
-        const termParam = req.query["q"] ?? req.query["searchTerm"];
+        // Accept 'title', 'q', or 'searchTerm' as the search query param
+        const termParam = req.query["title"] ?? req.query["q"] ?? req.query["searchTerm"];
         const catParam = req.query["categoryId"];
         const statusParam = req.query["status"];
 
         const limit = typeof limitParam === "string" ? parseInt(limitParam, 10) : undefined;
-        const offset = typeof offsetParam === "string" ? parseInt(offsetParam, 10) : undefined;
-        const searchTerm = typeof termParam === "string" ? termParam : undefined;
+        // Support page-based pagination: page=1 => offset=0, page=2 => offset=limit, etc.
+        const page = typeof pageParam === "string" ? parseInt(pageParam, 10) : undefined;
+        const rawOffset = typeof offsetParam === "string" ? parseInt(offsetParam, 10) : undefined;
+        const offset =
+            rawOffset !== undefined && !isNaN(rawOffset)
+                ? rawOffset
+                : page !== undefined && !isNaN(page) && limit !== undefined && !isNaN(limit)
+                  ? (page - 1) * limit
+                  : undefined;
+        const searchTerm = typeof termParam === "string" ? termParam.trim() || undefined : undefined;
         const categoryId = typeof catParam === "string" ? catParam : undefined;
         const status = typeof statusParam === "string" ? (statusParam as BlogStatus) : undefined;
 
         const filters = {
             ...(limit !== undefined && !isNaN(limit) && { limit }),
-            ...(offset !== undefined && !isNaN(offset) && { offset }),
+            ...(offset !== undefined && { offset }),
             ...(searchTerm !== undefined && { searchTerm }),
             ...(categoryId !== undefined && { categoryId }),
             ...(status !== undefined && { status }),
