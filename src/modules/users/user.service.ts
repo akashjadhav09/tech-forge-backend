@@ -25,7 +25,6 @@ function toUserProfile(user: Awaited<ReturnType<typeof findUserById>> & object):
 // Returns the full profile of the currently authenticated user.
 export async function getCurrentUserDetails(userId: string): Promise<UserProfile> {
     const user = await findUserById(userId);
-    console.log("User service");
     if (!user) {
         throw new AppError(404, "User not found");
     }

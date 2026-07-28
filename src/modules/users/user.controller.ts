@@ -44,7 +44,6 @@ export async function getCurrentUserProfileDetailsController(
     res: Response,
     next: NextFunction
 ) {
-    console.log("In get current user profile details controller")
     try {
         const userId = requireUserId(req);
         const userProfile = await getCurrentUserDetails(userId);

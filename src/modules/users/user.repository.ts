@@ -7,7 +7,6 @@ import type { UserRow } from "../auth/auth.types.ts";
  * Returns null if no matching user exists.
  */
 export async function findUserById(userId: string): Promise<UserRow | null> {
-    console.log("User findUserById");
 
     const result = await pool.query<UserRow>(
         `SELECT user_id, full_name, email, bio, profile_image, created_at, updated_at
