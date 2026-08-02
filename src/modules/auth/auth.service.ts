@@ -69,3 +69,24 @@ export async function resetPassword(data: ResetPasswordInput): Promise<void> {
     password: hashedPassword,
   });
 }
+
+export async function refreshToken(data: RefreshTokenInput): Promise<AuthTokens> {
+  let userId: string;
+
+  try {
+    const payload = verifyRefreshToken(data.refreshToken);
+    userId = payload.userId;
+  } catch {
+    throw new AppError(401, "Invalid or expired refresh token");
+  }
+
+  const user = await findUserById(userId);
+  if (!user) {
+    throw new AppError(401, "User no longer exists");
+  }
+
+  const accessToken = generateAccessToken(user.user_id);
+  const newRefreshToken = generateRefreshToken(user.user_id);
+
+  return { accessToken, refreshToken: newRefreshToken };
+}
