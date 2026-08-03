@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+import path from "path";
 import {
     getCurrentUserDetails,
     getUserDetailsById,
@@ -137,7 +138,8 @@ export async function updateUserAvatarController(
             throw new AppError(400, "No image file uploaded.");
         }
 
-        const userProfile = await updateCurrentUserAvatar(userId, req.file.path);
+        const relativePath = path.relative(process.cwd(), req.file.path).replace(/\\/g, "/");
+        const userProfile = await updateCurrentUserAvatar(userId, relativePath);
 
         res.status(200).json({
             success: true,
